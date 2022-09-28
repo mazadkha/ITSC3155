@@ -19,6 +19,10 @@ class TestPythonBasicsOne(unittest.TestCase):
 
         # Please add three more test cases following the order above
 
+        self.assertEqual(pythonBasics3.starts_with_non_number("I love coding"), True)
+        self.assertEqual(pythonBasics3.starts_with_non_number("1 love coding"), False)
+        self.assertEqual(pythonBasics3.starts_with_non_number("9 love coding"), False)
+
 #Test case for multiple_words
     def test_multiple_words(self):
 
