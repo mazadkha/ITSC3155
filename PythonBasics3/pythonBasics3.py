@@ -23,9 +23,8 @@ def starts_with_non_number(s):
 # Note: Be sure to use RegEx and that it works for any whitespace character 
 # with at least one character on either side!
 def multiple_words(s):
-  # YOUR CODE HERE
-
-  return
+  x = bool(re.search(". .",s))
+  return (x)
 
 
 # Part C. reserved_us_tld
