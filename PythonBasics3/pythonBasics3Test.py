@@ -59,7 +59,7 @@ class TestPythonBasicsOne(unittest.TestCase):
         self.assertEqual(pythonBasics3.reserved_us_tld("https://www.congress.gov"), True)
 
         # This does match the description (https and .edu) but it includes extra stuff. Feel free to implement this functionality.
-        self.assertEqual(pythonBasics3.reserved_us_tld("https://selfservice.uncc.edu/pls/BANPROD/twbkwbis.P_GenMenu?name=homepage"), False)
+        self.assertEqual(pythonBasics3.reserved_us_tld("https://selfservice.uncc.edu/pls/BANPROD/twbkwbis.P_GenMenu?name=homepage"), True)
 
 
 
