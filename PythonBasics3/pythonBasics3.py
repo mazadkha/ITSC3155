@@ -13,9 +13,8 @@ import re
 # (For our purposes, a number is any character that is 0,1,2,3,4,5,6,7,8, or 9.)
 # Note: Be sure to use RegEx!
 def starts_with_non_number(s):
-  # YOUR CODE HERE
-
-  return
+  x = bool(re.match("[^0-9]",s[0]))
+  return (x)
 
 # # Part B. multiple_words
 # Define a function multiple_words(s) that takes a string and returns true
