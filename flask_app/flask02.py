@@ -23,7 +23,8 @@ def index():
 def get_notes():
     notes = {
         1: {'title': 'First note', 'text': 'This is my first note', 'date': '10/18/2022'},
-        2: {'title': 'Second note', 'text': 'This is my second note', 'date': '10/19/2022'}
+        2: {'title': 'Second note', 'text': 'This is my second note', 'date': '10/19/2022'},
+        3: {'title': 'Third note', 'text': 'This is my Third note', 'date': '10/20/2022'}
     }
     return render_template('notes.html', notes=notes)
 
@@ -32,7 +33,8 @@ def get_notes():
 def get_note(note_id):
     notes = {
         1: {'title': 'First note', 'text': 'This is my first note', 'date': '10/18/2022'},
-        2: {'title': 'Second note', 'text': 'This is my second note', 'date': '10/19/2022'}
+        2: {'title': 'Second note', 'text': 'This is my second note', 'date': '10/19/2022'},
+        3: {'title': 'Third note', 'text': 'This is my Third note', 'date': '10/20/2022'}
     }
     return render_template('note.html', note=notes[int(note_id)])
 
