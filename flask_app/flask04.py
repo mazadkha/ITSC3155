@@ -61,8 +61,8 @@ def new_note():
         today = date.today()
         # format date
         today = today.strftime("%m-%d-%Y")
-        new_record = Note(title, text, date)
-        db.session.query(new_record)
+        new_record = Note(title, text, today)
+        db.session.add(new_record)
         db.session.commit()
 
         return redirect(url_for('get_notes'))
