@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 # Setup models
 with app.app_context():
-    db.create_all()   # run under the app context
+    db.create_all()  # run under the app context
 
 
 # @app.route is a decorator. It gives the function "index" special powers.
@@ -71,6 +71,18 @@ def new_note():
         # Retrieve user from database
         a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
         return render_template('new.html', user=a_user)
+
+
+@app.route('/notes/edit/<note_id>')
+def update_note(note_id):
+    # Get request - Show new note form to edt note
+    # Retrieve user from database
+    a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
+
+    # Retrieve notes from database
+    my_note = db.session.query(Note).filter_by(id=note_id).one()
+
+    return render_template('new.html', note=my_note, user=a_user)
 
 
 app.run(host=os.getenv('IP', '127.0.0.1'), port=int(os.getenv('PORT', 5000)), debug=True)
