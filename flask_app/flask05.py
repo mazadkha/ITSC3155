@@ -73,14 +73,29 @@ def new_note():
         return render_template('new.html', user=a_user)
 
 
-@app.route('/notes/edit/<note_id>')
+@app.route('/notes/edit/<note_id>', methods=['GET', 'POST'])
 def update_note(note_id):
-    # Get request - Show new note form to edt note
-    # Retrieve user from database
-    a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
+    if request.method == 'POST':
+        # get title data
+        title = request.form['title']
+        # get note data
+        text = request.form['noteText']
+        note = db.session.query(Note).filter_by(id=note_id).one()
+        # Update note data
+        note.title = title
+        note.text = text
+        # Update note to db
+        db.session.add(note)
+        db.session.commit()
 
-    # Retrieve notes from database
-    my_note = db.session.query(Note).filter_by(id=note_id).one()
+        return redirect(url_for('get_notes'))
+    else:
+        # Get request - Show new note form to edt note
+        # Retrieve user from database
+        a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
+
+        # Retrieve notes from database
+        my_note = db.session.query(Note).filter_by(id=note_id).one()
 
     return render_template('new.html', note=my_note, user=a_user)
 
