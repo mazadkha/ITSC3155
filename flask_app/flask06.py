@@ -32,9 +32,11 @@ with app.app_context():
 @app.route('/')
 @app.route('/index')
 def index():
-    # Get the user from database
-    a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
-    return render_template('index.html', user=a_user)
+
+    # Check if the user is saved in session
+    if session.get('user'):
+        return render_template('index.html', user=session['user'])
+    return render_template('index.html')
 
 
 @app.route('/notes')
@@ -61,63 +63,76 @@ def get_note(note_id):
 
 @app.route('/notes/new', methods=['GET', 'POST'])
 def new_note():
-    if request.method == 'POST':
-        # get title data
-        title = request.form['title']
-        # get note data
-        text = request.form['noteText']
-        # Create data stamp
-        from datetime import date
-        today = date.today()
-        # format date
-        today = today.strftime("%m-%d-%Y")
-        new_record = Note(title, text, today)
-        db.session.add(new_record)
-        db.session.commit()
+    # Check if the user is saved in session
+    if session.get('user'):
+        # Check method used for request
+        if request.method == 'POST':
+            # get title data
+            title = request.form['title']
+            # get note data
+            text = request.form['noteText']
+            # Create data stamp
+            from datetime import date
+            today = date.today()
+            # format date
+            today = today.strftime("%m-%d-%Y")
+            new_record = Note(title, text, today, session['user_id'])
+            db.session.add(new_record)
+            db.session.commit()
 
-        return redirect(url_for('get_notes'))
+            return redirect(url_for('get_notes'))
+        else:
+            # Get request - show new notes form
+
+            return render_template('new.html', user=session['user_id'])
     else:
-        # Get request - show new notes form
-        # Retrieve user from database
-        a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
-        return render_template('new.html', user=a_user)
+        # user is not logged in
+        return render_template(url_for('login'))
 
 
 @app.route('/notes/edit/<note_id>', methods=['GET', 'POST'])
 def update_note(note_id):
-    if request.method == 'POST':
-        # get title data
-        title = request.form['title']
-        # get note data
-        text = request.form['noteText']
-        note = db.session.query(Note).filter_by(id=note_id).one()
-        # Update note data
-        note.title = title
-        note.text = text
-        # Update note to db
-        db.session.add(note)
-        db.session.commit()
+    # Check if the user is saved in session
+    if session.get('user'):
+        if request.method == 'POST':
+            # get title data
+            title = request.form['title']
+            # get note data
+            text = request.form['noteText']
+            note = db.session.query(Note).filter_by(id=note_id).one()
+            # Update note data
+            note.title = title
+            note.text = text
+            # Update note to db
+            db.session.add(note)
+            db.session.commit()
 
-        return redirect(url_for('get_notes'))
+            return redirect(url_for('get_notes'))
+        else:
+            # Get request - Show new note form to edt note
+
+            # Retrieve notes from database
+            my_note = db.session.query(Note).filter_by(id=note_id).one()
+
+            return render_template('new.html', note=my_note, user=session['user_id'])
     else:
-        # Get request - Show new note form to edt note
-        # Retrieve user from database
-        a_user = db.session.query(User).filter_by(email='mazad@uncc.edu').one()
-
-        # Retrieve notes from database
-        my_note = db.session.query(Note).filter_by(id=note_id).one()
-
-    return render_template('new.html', note=my_note, user=a_user)
+        # user is not in the session redirect to log in
+        return render_template(url_for('login'))
 
 
 @app.route('/notes/delete/<note_id>', methods=['POST'])
 def delete_note(note_id):
-    # Retrieve note from database
-    my_note = db.session.query(Note).filter_by(id=note_id).one()
-    db.session.delete(my_note)
-    db.session.commit()
+    # Check if the user is saved in session
+    if session.get('user'):
+        # Retrieve note from database
+        my_note = db.session.query(Note).filter_by(id=note_id).one()
+        db.session.delete(my_note)
+        db.session.commit()
 
-    return redirect(url_for('get_notes'))
+        return redirect(url_for('get_notes'))
+    else:
+        # user is not in the session redirect to log in
+        return render_template(url_for('login'))
 
 
 @app.route('/register', methods=['POST', 'GET'])
